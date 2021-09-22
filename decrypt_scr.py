@@ -22,7 +22,7 @@ def main(data):
     for i in range (len(data)):
         print(chr(data[i] ^ (seed & 0xFF)), end ='')
         #print(hex(seed))
-        newFile.write((data[i] ^ (seed & 0xFF)).to_bytes(2, byteorder='big'))
+        newFile.write((data[i] ^ (seed & 0xFF)).to_bytes(1, byteorder='big'))
         seedkey()
 
 if len(sys.argv)!=3:
