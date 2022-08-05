@@ -1,0 +1,1 @@
+audidecode.exe encoded_script.sh > decoded_script.sh
