@@ -12,8 +12,6 @@ def seedkey(seed):
     r3 = ((r1 >> 16) & 0xFF) + r1
     r1 = ((r3 >> 8 & 0xFF) << 16) & mask
     r3 -= r1
-    
-       
     return r3 & mask
 
 def main(data):
@@ -32,7 +30,12 @@ if path.exists(sys.argv[2]) == True:
     print("File already exists")
     sys.exit()
 
-f=open(sys.argv[1],"rb")
+if path.exists(sys.argv[1]) == True:
+    f=open(sys.argv[1],"rb")
+else:
+    print("Input file missing")
+    sys.exit()
+
 data=f.read()
 f.close()
 newFile=open(sys.argv[2],'wb')
