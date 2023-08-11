@@ -1,29 +1,29 @@
 import sys
 import os
 from os import path
-from ctypes import *
-import os.path
 
-seed=0x1be3ac
+seed = 0x1be3ac
 
-decrypt = CDLL('./decrypt.so')
+os.system('cls' if os.name=='nt' else 'clear')
 
-def cls():
-    os.system('cls' if os.name=='nt' else 'clear')
-
-cls()
-
-def seedkey():
-    global seed
-    seed=decrypt.prng_rand(seed)
+def seedkey(seed):
+    mask = 2 ** 32 - 1
+    r1 = seed >> 1 | ((seed << 31) & mask)
+    r3 = ((r1 >> 16) & 0xFF) + r1
+    r1 = ((r3 >> 8 & 0xFF) << 16) & mask
+    r3 -= r1
     
+       
+    return r3 & mask
+
 def main(data):
     global seed
+    seed = seedkey(seed)
     for i in range (len(data)):
         print(chr(data[i] ^ (seed & 0xFF)), end ='')
-        #print(hex(seed))
-        newFile.write((data[i] ^ (seed & 0xFF)).to_bytes(1, byteorder='big'))
-        seedkey()
+        newFile.write(bytes([data[i] ^ (seed & 0xFF)]))
+        seed = seedkey(seed)
+        
 
 if len(sys.argv)!=3:
     print("Usage: "+sys.argv[0]+" input _filename output_filename")
@@ -37,7 +37,6 @@ data=f.read()
 f.close()
 newFile=open(sys.argv[2],'wb')
 print("File size: %d" % len(data))
-seedkey()
 main(data)
 newFile.close()
 
